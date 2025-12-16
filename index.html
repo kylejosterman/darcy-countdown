@@ -464,27 +464,39 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .scene {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .darcy {
-                margin-left: 0;
-                margin-top: -50px;
-            }
-
-            .darcy img {
-                width: 150px;
-            }
-
-            .tree-container {
-                transform: scale(0.8);
+            .countdown {
+                gap: 8px;
             }
 
             .countdown-item {
-                min-width: 70px;
-                padding: 15px;
+                min-width: 60px;
+                padding: 10px 12px;
+            }
+
+            .countdown-value {
+                font-size: 1.8rem;
+            }
+
+            .countdown-label {
+                font-size: 0.7rem;
+            }
+
+            .scene {
+                flex-direction: row;
+                align-items: flex-end;
+            }
+
+            .darcy {
+                margin-left: -20px;
+            }
+
+            .darcy img {
+                width: 120px;
+            }
+
+            .tree-container {
+                transform: scale(0.55);
+                margin-bottom: -80px;
             }
         }
     </style>
