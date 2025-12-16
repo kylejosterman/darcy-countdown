@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Darcy</title>
+
+    <!--
+    =====================================================
+    GITHUB PAGES DEPLOYMENT INSTRUCTIONS
+    =====================================================
+
+    1. Create a new repository on GitHub (e.g., "darcy-countdown")
+
+    2. Initialize and push this project:
+       git init
+       git add .
+       git commit -m "Initial commit"
+       git branch -M main
+       git remote add origin https://github.com/YOUR_USERNAME/darcy-countdown.git
+       git push -u origin main
+
+    3. Enable GitHub Pages:
+       - Go to your repository on GitHub
+       - Click "Settings" tab
+       - Scroll to "Pages" in the left sidebar
+       - Under "Source", select "Deploy from a branch"
+       - Select "main" branch and "/ (root)" folder
+       - Click "Save"
+
+    4. Wait 1-2 minutes, then visit:
+       https://YOUR_USERNAME.github.io/darcy-countdown/
+
+    =====================================================
+    -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(180deg,
+                #1a2a4a 0%,
+                #2d4a6d 30%,
+                #4a6d8a 60%,
+                #8ab4c4 85%,
+                #c4d4dc 100%
+            );
+            position: relative;
+        }
+
+        /* Snow ground */
+        .snow-ground {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(180deg,
+                rgba(255,255,255,0.9) 0%,
+                #f0f5f8 50%,
+                #e8f0f4 100%
+            );
+            border-radius: 100% 100% 0 0 / 40px 40px 0 0;
+            z-index: 1;
+        }
+
+        /* Snowflakes */
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -20px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #e8f4ff);
+            border-radius: 50%;
+            opacity: 0.9;
+            animation: fall linear infinite;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* Main content */
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        /* Title */
+        .title {
+            font-family: 'Mountains of Christmas', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow:
+                3px 3px 0 #c41e3a,
+                6px 6px 0 rgba(0,0,0,0.2),
+                0 0 30px rgba(255,255,255,0.5);
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .countdown-item {
+            background: linear-gradient(145deg, #c41e3a, #8b1528);
+            border-radius: 15px;
+            padding: 20px 25px;
+            min-width: 100px;
+            text-align: center;
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.3),
+                inset 0 2px 0 rgba(255,255,255,0.2);
+            border: 3px solid #f5d76e;
+        }
+
+        .countdown-value {
+            font-family: 'Mountains of Christmas', cursive;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #f5d76e;
+            text-transform: uppercase;
+            margin-top: 5px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Scene container */
+        .scene {
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 0;
+            margin-top: auto;
+            padding-bottom: 80px;
+        }
+
+        /* Christmas Tree */
+        .tree-container {
+            position: relative;
+            width: 280px;
+            height: 380px;
+        }
+
+        .tree {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Tree layers */
+        .tree-layer {
+            width: 0;
+            height: 0;
+            border-left: solid transparent;
+            border-right: solid transparent;
+            border-bottom-style: solid;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tree-layer-1 {
+            border-left-width: 50px;
+            border-right-width: 50px;
+            border-bottom-width: 80px;
+            border-bottom-color: #1d5c3e;
+            bottom: 280px;
+        }
+
+        .tree-layer-2 {
+            border-left-width: 70px;
+            border-right-width: 70px;
+            border-bottom-width: 100px;
+            border-bottom-color: #247a4d;
+            bottom: 200px;
+        }
+
+        .tree-layer-3 {
+            border-left-width: 90px;
+            border-right-width: 90px;
+            border-bottom-width: 120px;
+            border-bottom-color: #2d9a5d;
+            bottom: 100px;
+        }
+
+        .tree-layer-4 {
+            border-left-width: 110px;
+            border-right-width: 110px;
+            border-bottom-width: 130px;
+            border-bottom-color: #1d5c3e;
+            bottom: 0;
+        }
+
+        /* Tree trunk */
+        .trunk {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(90deg, #5d3a1a, #8b5a2b, #5d3a1a);
+            border-radius: 0 0 5px 5px;
+        }
+
+        /* Star */
+        .star {
+            position: absolute;
+            bottom: 345px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #fff9c4 0%, #f5d76e 50%, #d4a017 100%);
+            clip-path: polygon(
+                50% 0%,
+                61% 35%,
+                98% 35%,
+                68% 57%,
+                79% 91%,
+                50% 70%,
+                21% 91%,
+                32% 57%,
+                2% 35%,
+                39% 35%
+            );
+            box-shadow: 0 0 20px #f5d76e, 0 0 40px #ffa500;
+            animation: twinkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* Ornaments */
+        .ornament {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            box-shadow:
+                inset -3px -3px 6px rgba(0,0,0,0.3),
+                inset 3px 3px 6px rgba(255,255,255,0.3),
+                0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .ornament::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 6px;
+            background: #c0c0c0;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .ornament-red { background: radial-gradient(circle at 30% 30%, #ff6b6b, #c41e3a); }
+        .ornament-gold { background: radial-gradient(circle at 30% 30%, #ffe066, #d4a017); }
+        .ornament-blue { background: radial-gradient(circle at 30% 30%, #74b9ff, #0984e3); }
+        .ornament-purple { background: radial-gradient(circle at 30% 30%, #a29bfe, #6c5ce7); }
+        .ornament-silver { background: radial-gradient(circle at 30% 30%, #ffffff, #b8b8b8); }
+
+        /* Ornament positions */
+        .ornament:nth-child(13) { top: 80px; left: 115px; }
+        .ornament:nth-child(2) { top: 110px; left: 145px; }
+        .ornament:nth-child(3) { top: 140px; left: 95px; }
+        .ornament:nth-child(4) { top: 170px; left: 165px; }
+        .ornament:nth-child(5) { top: 180px; left: 115px; }
+        .ornament:nth-child(6) { top: 220px; left: 80px; }
+        .ornament:nth-child(7) { top: 230px; left: 140px; }
+        .ornament:nth-child(8) { top: 250px; left: 185px; }
+        .ornament:nth-child(9) { top: 290px; left: 100px; }
+        .ornament:nth-child(10) { top: 300px; left: 170px; }
+        .ornament:nth-child(11) { top: 320px; left: 60px; }
+        .ornament:nth-child(12) { top: 330px; left: 210px; }
+
+        /* Lights */
+        .lights {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .light {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: glow 1s ease-in-out infinite;
+        }
+
+        .light-red { background: #ff4757; box-shadow: 0 0 10px #ff4757, 0 0 20px #ff4757; }
+        .light-yellow { background: #ffd32a; box-shadow: 0 0 10px #ffd32a, 0 0 20px #ffd32a; }
+        .light-green { background: #05c46b; box-shadow: 0 0 10px #05c46b, 0 0 20px #05c46b; }
+        .light-blue { background: #3498db; box-shadow: 0 0 10px #3498db, 0 0 20px #3498db; }
+
+        .light:nth-child(1) { top: 65px; left: 130px; animation-delay: 0s; }
+        .light:nth-child(2) { top: 95px; left: 105px; animation-delay: 0.2s; }
+        .light:nth-child(3) { top: 95px; left: 158px; animation-delay: 0.4s; }
+        .light:nth-child(4) { top: 130px; left: 85px; animation-delay: 0.6s; }
+        .light:nth-child(5) { top: 125px; left: 135px; animation-delay: 0.8s; }
+        .light:nth-child(6) { top: 130px; left: 180px; animation-delay: 0.1s; }
+        .light:nth-child(7) { top: 175px; left: 70px; animation-delay: 0.3s; }
+        .light:nth-child(8) { top: 165px; left: 145px; animation-delay: 0.5s; }
+        .light:nth-child(9) { top: 175px; left: 195px; animation-delay: 0.7s; }
+        .light:nth-child(10) { top: 215px; left: 55px; animation-delay: 0.9s; }
+        .light:nth-child(11) { top: 210px; left: 110px; animation-delay: 0.15s; }
+        .light:nth-child(12) { top: 210px; left: 165px; animation-delay: 0.35s; }
+        .light:nth-child(13) { top: 220px; left: 220px; animation-delay: 0.55s; }
+        .light:nth-child(14) { top: 270px; left: 45px; animation-delay: 0.75s; }
+        .light:nth-child(15) { top: 265px; left: 130px; animation-delay: 0.95s; }
+        .light:nth-child(16) { top: 275px; left: 200px; animation-delay: 0.25s; }
+
+        @keyframes glow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Presents */
+        .presents {
+            position: absolute;
+            bottom: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .present {
+            position: relative;
+        }
+
+        .present-box {
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .present-ribbon-v {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 100%;
+        }
+
+        .present-ribbon-h {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 8px;
+        }
+
+        .present-bow {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+        }
+
+        .present-1 .present-box { width: 50px; height: 40px; background: linear-gradient(145deg, #e74c3c, #c0392b); }
+        .present-1 .present-ribbon-v, .present-1 .present-ribbon-h { background: #f5d76e; }
+
+        .present-2 .present-box { width: 40px; height: 50px; background: linear-gradient(145deg, #3498db, #2980b9); }
+        .present-2 .present-ribbon-v, .present-2 .present-ribbon-h { background: #e74c3c; }
+
+        .present-3 .present-box { width: 55px; height: 35px; background: linear-gradient(145deg, #9b59b6, #8e44ad); }
+        .present-3 .present-ribbon-v, .present-3 .present-ribbon-h { background: #2ecc71; }
+
+        .present-4 .present-box { width: 35px; height: 45px; background: linear-gradient(145deg, #2ecc71, #27ae60); }
+        .present-4 .present-ribbon-v, .present-4 .present-ribbon-h { background: #f5d76e; }
+
+        /* Darcy */
+        .darcy {
+            position: relative;
+            z-index: 5;
+            margin-left: -30px;
+        }
+
+        .darcy img {
+            width: 210px;
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            animation: darcy-bounce 3s ease-in-out infinite;
+        }
+
+        @keyframes darcy-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Completed message */
+        .completed {
+            display: none;
+            font-family: 'Mountains of Christmas', cursive;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            color: #f5d76e;
+            text-shadow: 3px 3px 0 #c41e3a;
+            text-align: center;
+            animation: celebrate 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .scene {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .darcy {
+                margin-left: 0;
+                margin-top: -50px;
+            }
+
+            .darcy img {
+                width: 150px;
+            }
+
+            .tree-container {
+                transform: scale(0.8);
+            }
+
+            .countdown-item {
+                min-width: 70px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Snowflakes container -->
+    <div class="snowflakes" id="snowflakes"></div>
+
+    <!-- Snow ground -->
+    <div class="snow-ground"></div>
+
+    <!-- Main content -->
+    <div class="container">
+        <h1 class="title">Countdown to Darcy</h1>
+
+        <div class="countdown" id="countdown">
+            <div class="countdown-item">
+                <div class="countdown-value" id="days">00</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="hours">00</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="minutes">00</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="seconds">00</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+
+        <div class="completed" id="completed">Darcy is Here!</div>
+
+        <div class="scene">
+            <div class="tree-container">
+                <div class="tree">
+                    <div class="star"></div>
+                    <div class="tree-layer tree-layer-1"></div>
+                    <div class="tree-layer tree-layer-2"></div>
+                    <div class="tree-layer tree-layer-3"></div>
+                    <div class="tree-layer tree-layer-4"></div>
+                    <div class="trunk"></div>
+                </div>
+
+                <!-- Ornaments -->
+                <div class="ornament ornament-red"></div>
+                <div class="ornament ornament-gold"></div>
+                <div class="ornament ornament-blue"></div>
+                <div class="ornament ornament-purple"></div>
+                <div class="ornament ornament-silver"></div>
+                <div class="ornament ornament-red"></div>
+                <div class="ornament ornament-gold"></div>
+                <div class="ornament ornament-blue"></div>
+                <div class="ornament ornament-purple"></div>
+                <div class="ornament ornament-silver"></div>
+                <div class="ornament ornament-red"></div>
+                <div class="ornament ornament-gold"></div>
+
+                <!-- Lights -->
+                <div class="lights">
+                    <div class="light light-red"></div>
+                    <div class="light light-yellow"></div>
+                    <div class="light light-green"></div>
+                    <div class="light light-blue"></div>
+                    <div class="light light-red"></div>
+                    <div class="light light-yellow"></div>
+                    <div class="light light-green"></div>
+                    <div class="light light-blue"></div>
+                    <div class="light light-red"></div>
+                    <div class="light light-yellow"></div>
+                    <div class="light light-green"></div>
+                    <div class="light light-blue"></div>
+                    <div class="light light-red"></div>
+                    <div class="light light-yellow"></div>
+                    <div class="light light-green"></div>
+                    <div class="light light-blue"></div>
+                </div>
+
+                <!-- Presents -->
+                <div class="presents">
+                    <div class="present present-1">
+                        <div class="present-box">
+                            <div class="present-ribbon-v"></div>
+                            <div class="present-ribbon-h"></div>
+                        </div>
+                        <div class="present-bow">🎀</div>
+                    </div>
+                    <div class="present present-2">
+                        <div class="present-box">
+                            <div class="present-ribbon-v"></div>
+                            <div class="present-ribbon-h"></div>
+                        </div>
+                        <div class="present-bow">🎀</div>
+                    </div>
+                    <div class="present present-3">
+                        <div class="present-box">
+                            <div class="present-ribbon-v"></div>
+                            <div class="present-ribbon-h"></div>
+                        </div>
+                        <div class="present-bow">🎀</div>
+                    </div>
+                    <div class="present present-4">
+                        <div class="present-box">
+                            <div class="present-ribbon-v"></div>
+                            <div class="present-ribbon-h"></div>
+                        </div>
+                        <div class="present-bow">🎀</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="darcy">
+                <img src="darcy.png" alt="Darcy the Bernedoodle">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create snowflakes
+        function createSnowflakes() {
+            const container = document.getElementById('snowflakes');
+            const snowflakeCount = 50;
+
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+
+                // Random properties for variety
+                const size = Math.random() * 15 + 8; // 8-23px
+                const left = Math.random() * 100; // 0-100%
+                const duration = Math.random() * 10 + 8; // 8-18s
+                const delay = Math.random() * 10; // 0-10s delay
+
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                snowflake.style.left = `${left}%`;
+                snowflake.style.animationDuration = `${duration}s`;
+                snowflake.style.animationDelay = `${delay}s`;
+
+                container.appendChild(snowflake);
+            }
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            // Target: Dec 21, 2025 9:30 PM Central Time (CST = UTC-6)
+            // During standard time (winter), Central is UTC-6
+            const targetDate = new Date('2025-12-21T21:30:00-06:00');
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                // Countdown complete
+                document.getElementById('countdown').style.display = 'none';
+                document.getElementById('completed').style.display = 'block';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Initialize
+        createSnowflakes();
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
+
